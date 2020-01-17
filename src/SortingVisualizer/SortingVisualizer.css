@@ -1,0 +1,13 @@
+.array-container{
+    display:flex;
+    justify-content:center;
+}
+
+.array-bar {
+    width:2px;
+    margin:0 1px;
+    display:inline;
+}
+
+
+
