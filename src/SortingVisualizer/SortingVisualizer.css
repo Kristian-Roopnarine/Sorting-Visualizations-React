@@ -1,0 +1,12 @@
+.array-container{
+    display:flex;
+    justify-content:center;
+}
+
+.array-bar {
+    background-color:blue;
+    width:2px;
+    margin:0 1px;
+    display:inline;
+}
+
