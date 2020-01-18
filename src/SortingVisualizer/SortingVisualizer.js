@@ -1,11 +1,14 @@
 import React from 'react'
 import "./SortingVisualizer.css"
 import quickSort from "./quicksort.js"
+import Button from '@material-ui/core/Button'
+
 
 const DEFAULT_COLOR = 'blue'
 const PIVOT_COLOR = 'red'
 const COMPARISON_COLOR = 'yellow'
 const MOVING_PIVOT = '#A3E4D7'
+
 
 export default class SortingVisualizer extends React.Component{
     constructor(props){
@@ -30,40 +33,35 @@ export default class SortingVisualizer extends React.Component{
     startQuickSort(){
         if (this.state.sorted == false){
             let sortedArray = quickSort(this.state.array,0,this.state.array.length-1,this.state.animations)
-            for (let i = 0;i < sortedArray.length-1;i++){
-                const arrayBar = document.getElementsByClassName('array-bar');
-                const [pivotIndex,pivotValueIndex,comparison,swap] = sortedArray[i];
-                const pivotValue = arrayBar[pivotValueIndex];
-                const comparisonValue = arrayBar[comparison];
-                const pivotIndexValue = arrayBar[pivotIndex];
-
-                setTimeout(()=>{
-                    // Changes bar colors to correct color
-                    comparisonValue.style.backgroundColor = COMPARISON_COLOR;
-                    pivotIndexValue.style.backgroundColor = MOVING_PIVOT;
-
-                    if (swap === 1){
-                        // if swapping pivot index and comparison (if arr[i] < pivotValue)
-                        const barOneHeight = pivotIndexValue.style.height;
-                        const barTwoHeight = comparisonValue.style.height;
-                        pivotIndexValue.style.height = `${barTwoHeight}`;
-                        comparisonValue.style.height = `${barOneHeight}`;
-    
-                    } else if (swap === 2){
-                        // swap pivot value and pivot index (ending for loop in partition)
-                        const barOneHeight = pivotValue.style.height;
-                        const barTwoHeight = pivotIndexValue.style.height;
-                        pivotValue.style.height = `${barTwoHeight}`;
-                        pivotIndexValue.style.height = `${barOneHeight}`;
-                    }
-                    setTimeout(()=>{
-                        //change the bars back to original color
-                        comparisonValue.style.backgroundColor = DEFAULT_COLOR;
-                        pivotIndexValue.style.backgroundColor = DEFAULT_COLOR;
-                    },50);
-                },i*1.5);
-            }
             
+            for (let i = 0; i < sortedArray.length; i++){
+                const arrayBar = document.getElementsByClassName('array-bar');
+                // sortedArray is a list of lists that contain [currentPivotIndex,currentComparison]
+                const [index1,index2,swap] = sortedArray[i];
+                const barOne = arrayBar[index1];
+                const barTwo = arrayBar[index2];
+                // get the style of each
+                const barOneStyle = barOne.style;
+                const barTwoStyle = barTwo.style;
+
+                // is true every second element
+                // change color every second element
+                const doSwap = swap === 1
+                const colorChange = i % 2 === 1
+                if (colorChange === true && doSwap === true){
+                    setTimeout(()=>{  
+                        barOneStyle.backgroundColor = DEFAULT_COLOR;
+                        const barOneHeight = barOneStyle.height
+                        const barTwoHeight = barTwoStyle.height
+                        barOneStyle.height = `${barTwoHeight}`
+                        barTwoStyle.height = `${barOneHeight}`
+                    },i*1);
+                } else if (colorChange === false){
+                    setTimeout(()=>{
+                        barOneStyle.backgroundColor = COMPARISON_COLOR;
+                    },i*1);
+                }
+            };
         this.setState({sorted:true});
         } else {
             return; 
@@ -93,14 +91,17 @@ export default class SortingVisualizer extends React.Component{
         const array = this.state.array;
         //turn each of the array elements into a dom element
         return (
-            <div className="array-container">
-                {array.map((value,idx) => <div className="array-bar" key={idx} style={{height:`${value}px`,backgroundColor:DEFAULT_COLOR}}></div>)}
-                <div>
-                    <button className="qs-button" type="Submit" onClick ={this.startQuickSort}>Start Quicksort!</button>
-                    <button className="qs-button" type="Submit" onClick={this.createNewArray}>Create New Array!</button>
+            <div className="flex-container">
+
+                <div className="array-container">
+                    {array.map((value,idx) => <div className="array-bar" key={idx} style={{height:`${value}px`,backgroundColor:DEFAULT_COLOR}}></div>)}
                 </div>
-                
-            </div> 
+
+                <div className="flex-container">
+                    <Button color="primary" variant ="contained" onClick ={this.createNewArray}>Create a new Array!</Button>
+                    <Button color="primary" variant ="contained" onClick ={this.startQuickSort}>Start Quicksort!</Button>
+                </div>
+            </div>
         );
     }
 }
