@@ -1,6 +1,7 @@
 import React from 'react'
 import "./SortingVisualizer.css"
 import quickSort from "./quicksort.js"
+import insertionSort from "./insertionsort.js"
 import Button from '@material-ui/core/Button'
 
 
@@ -21,13 +22,19 @@ export default class SortingVisualizer extends React.Component{
         this.state = {
             array : [],
             animations :[],
+            comparisons:0,
             sorted: false,
         }
         // binds the onclick to a variable
         this.createNewArray = this.createNewArray.bind(this)
         this.startQuickSort = this.startQuickSort.bind(this)
+        this.startInsertionSort = this.startInsertionSort.bind(this)
     }   
-
+    incrementComparisons = () =>{
+        this.setState((state)=>({
+            comparisons:(state.comparisons + 1)
+        }));
+    }
     //this should sort the current array
     //it then updates the state to re render the page
     startQuickSort(){
@@ -36,10 +43,12 @@ export default class SortingVisualizer extends React.Component{
             
             for (let i = 0; i < sortedArray.length; i++){
                 const arrayBar = document.getElementsByClassName('array-bar');
+
                 // sortedArray is a list of lists that contain [currentPivotIndex,currentComparison]
                 const [index1,index2,swap] = sortedArray[i];
                 const barOne = arrayBar[index1];
                 const barTwo = arrayBar[index2];
+
                 // get the style of each
                 const barOneStyle = barOne.style;
                 const barTwoStyle = barTwo.style;
@@ -48,6 +57,7 @@ export default class SortingVisualizer extends React.Component{
                 // change color every second element
                 const doSwap = swap === 1
                 const colorChange = i % 2 === 1
+
                 if (colorChange === true && doSwap === true){
                     setTimeout(()=>{  
                         barOneStyle.backgroundColor = DEFAULT_COLOR;
@@ -60,7 +70,8 @@ export default class SortingVisualizer extends React.Component{
                     setTimeout(()=>{
                         barOneStyle.backgroundColor = COMPARISON_COLOR;
                     },i*1);
-                }
+                } 
+
             };
         this.setState({sorted:true});
         } else {
@@ -68,6 +79,30 @@ export default class SortingVisualizer extends React.Component{
         }
         
     }
+
+    startInsertionSort = () => {
+        let sortedArray = insertionSort(this.state.array,this.state.animations)
+        for (let i = 0; i < sortedArray.length;i++){
+            const arrayBar = document.getElementsByClassName('array-bar');
+            const [index1,index2] = sortedArray[i];
+            const barOne = arrayBar[index1];
+            const barTwo = arrayBar[index2];
+            const barOneStyle = barOne.style;
+            const barTwoStyle = barTwo.style;
+
+            const colorChange = i % 2 === 1
+
+            if (colorChange === true){
+                setTimeout(()=>{
+                    barOneStyle.backgroundColor = MOVING_PIVOT;
+                    const barOneHeight = barOneStyle.height
+                    const barTwoHeight = barTwoStyle.height
+                    barOneStyle.height = `${barTwoHeight}`
+                    barTwoStyle.height = `${barOneHeight}`
+                },i*1)
+            }
+        }
+    };
     // when the page loads and DOM is inserted then the array will be populated.
     componentDidMount(){
         this.resetArray();
@@ -83,12 +118,13 @@ export default class SortingVisualizer extends React.Component{
         for (let i = 0; i < 300 ; i++){
             array.push(randomIntFromInterval(5,400))
         };
-        this.setState({array:array,animations:[]});
-        this.setState({sorted:false})
+        this.setState({array:array,animations:[],sorted:false,comparisons:0});
     }
 
     render() {
         const array = this.state.array;
+        const {comparisons} = this.state;
+        const {color} = this.state;
         //turn each of the array elements into a dom element
         return (
             <div className="flex-container">
@@ -98,8 +134,10 @@ export default class SortingVisualizer extends React.Component{
                 </div>
 
                 <div className="flex-container">
+                    <h1>Comparisons : {comparisons}</h1>
                     <Button color="primary" variant ="contained" onClick ={this.createNewArray}>Create a new Array!</Button>
                     <Button color="primary" variant ="contained" onClick ={this.startQuickSort}>Start Quicksort!</Button>
+                    <Button color="primary" variant ="contained" onClick ={this.startInsertionSort}>Start Insertion sorted!</Button>
                 </div>
             </div>
         );
