@@ -1,4 +1,5 @@
-export default function quickSort(arr,start,end,animations){
+export default function quickSort(arr,start,end){
+    const animations = []
     const middleArray = arr.slice()
     quickSort2(middleArray,0,middleArray.length-1,animations)
     return animations

@@ -2,7 +2,7 @@
     display:flex;
     justify-content:center;
     flex-wrap: wrap;
-    width:50%;
+    width:75%;
     margin: auto;
 }
 
@@ -14,11 +14,12 @@
 .array-bar {
     width:2px;
     display:inline-block;
-    
+    align-self:flex-end;
+    margin: 0 1px;
 }
 
-.qs-button{
-    
+.button-container{
+    display:flex;
 }
 
 
