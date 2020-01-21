@@ -1,6 +1,6 @@
 import React from 'react'
 import "./SortingVisualizer.css"
-import Button from '@material-ui/core/Button'
+import {Button, Navbar, Nav, NavItem,Container} from 'reactstrap'
 
 
 export default class SortingButtons extends React.Component {
@@ -10,29 +10,31 @@ export default class SortingButtons extends React.Component {
 
     render() {
         return (
-                <div className = "navbar bg-dark py-3">
+            <div>
+                <Navbar color="dark" light expand="md">
+                    <Nav className ="mx-auto" navbar>
+                            <NavItem>
+                                <Button className = "mr-3" color ="info" onClick={this.props.newArray}> Create new array</Button>
+                            </NavItem>
 
-                    <div class="col text-center">
-                        <button  type="button" className = "btn btn-info" onClick ={this.props.newArray}>Create a new Array!</button>
-                    </div>
+                            <NavItem>
+                                <Button className = "mr-3" color ="info" onClick={this.props.startQS}>Quick Sort it</Button>
+                            </NavItem>
 
-                    <div class="col text-center">
-                        <button  type="button" className = "btn btn-info" onClick ={this.props.startQS}>Start Quicksort!</button>
-                        
-                    </div>
+                            <NavItem>
+                                <Button className = "mr-3" color ="info" onClick={this.props.startIS}>Insertion sort it</Button>
+                            </NavItem>
 
-                    <div class="col text-center">
-                        <button  type="button" className = "btn btn-info" onClick ={this.props.startIS}>Start Insertion sort!</button>
-                        
-                    </div>
+                            <NavItem>
+                                <Button className = "mr-3" color ="info" onClick={this.props.startBS}>Bubble sort it</Button>
+                            </NavItem>
 
-                    <div class="col text-center">
-                        <button  type="button" className = "btn btn-info" onClick ={this.props.startBS}>Start Bubble sort!</button>
-                        
-                    </div>
-
-        
-                </div>
+                            <NavItem>
+                                <Button className = "mr-3" color ="info" onClick={this.props.startHS}>Heap sort it</Button>
+                            </NavItem>
+                    </Nav>
+                </Navbar>
+            </div>       
         )
     }
 }
